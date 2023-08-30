@@ -1,67 +1,75 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MAX_SIZE 100
+
+// Structure to represent a stack
 struct Stack {
-    int maxSize;
+    int items[MAX_SIZE];
     int top;
-    int* array;
 };
 
-struct Stack* createStack(int maxSize) {
-    struct Stack* stack = (struct Stack*)malloc(sizeof(struct Stack));
-    stack->maxSize = maxSize;
+// Function to initialize a stack
+void initializeStack(struct Stack *stack) {
     stack->top = -1;
-    stack->array = (int*)malloc(maxSize * sizeof(int));
-    return stack;
 }
 
-int isEmpty(struct Stack* stack) {
+// Function to check if a stack is empty
+int isEmpty(struct Stack *stack) {
     return stack->top == -1;
 }
 
-void push(struct Stack* stack, int value) {
-    if (stack->top == stack->maxSize - 1) {
-        printf("Stack is full. Cannot push.\n");
+// Function to push an element onto the stack
+void push(struct Stack *stack, int value) {
+    if (stack->top == MAX_SIZE - 1) {
+        printf("Stack overflow\n");
         return;
     }
-    stack->array[++stack->top] = value;
+    stack->items[++stack->top] = value;
 }
 
-int pop(struct Stack* stack) {
+// Function to pop an element from the stack
+int pop(struct Stack *stack) {
     if (isEmpty(stack)) {
-        printf("Stack is empty. Cannot pop.\n");
+        printf("Stack underflow\n");
         return -1;
     }
-    return stack->array[stack->top--];
+    return stack->items[stack->top--];
+}
+
+// Function to print the bottom-most and top-most elements of a stack
+void printBottomTop(struct Stack *stack) {
+    if (isEmpty(stack)) {
+        printf("Stack is empty\n");
+        return;
+    }
+
+    printf("Bottom-most element: %d\n", stack->items[0]);
+    printf("Top-most element: %d\n", stack->items[stack->top]);
 }
 
 int main() {
-    struct Stack* bottomStack = createStack(10);
-    struct Stack* topStack = createStack(10);
+    struct Stack stack1, stack2;
+    initializeStack(&stack1);
+    initializeStack(&stack2);
 
-    
-    push(bottomStack, 5);
-    push(bottomStack, 10);
-    push(topStack, 15);
-    push(topStack, 20);
+    // Push elements onto stack1
+    push(&stack1, 10);
+    push(&stack1, 20);
+    push(&stack1, 30);
 
-    
-    if (!isEmpty(bottomStack)) {
-        printf("Bottom-most element: %d\n", bottomStack->array[0]);
-    } else {
-        printf("Bottom stack is empty.\n");
-    }
+    // Push elements onto stack2
+    push(&stack2, 100);
+    push(&stack2, 200);
+    push(&stack2, 300);
 
-    if (!isEmpty(topStack)) {
-        printf("Top-most element: %d\n", topStack->array[topStack->top]);
-    } else {
-        printf("Top stack is empty.\n");
-    }
+    // Print bottom-most and top-most elements of stack1
+    printf("Stack 1:\n");
+    printBottomTop(&stack1);
 
-    free(bottomStack->array);
-    free(bottomStack);
-    free(topStack->array);
-    free(topStack);
+    // Print bottom-most and top-most elements of stack2
+    printf("Stack 2:\n");
+    printBottomTop(&stack2);
 
     return 0;
 }
